@@ -10,10 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SellerDaoJDBC implements SellerDAO {
 
@@ -84,6 +81,44 @@ public class SellerDaoJDBC implements SellerDAO {
         }
     }
 
+    public List<Seller> findAll(){
+        PreparedStatement st = null;
+        ResultSet rs = null;
+
+        try {
+
+            st = conn.prepareStatement("select seller.*, department.Name as DepName " +
+                    "from seller inner join department on " +
+                    "seller.DepartmentId = department.Id " +
+                    "order by seller.Name");
+
+            rs = st.executeQuery();
+
+            List<Seller> sellerList = new ArrayList<>();
+            Map<Integer, Department> mapDeparment = new HashMap<>();
+
+            while (rs.next()){
+                Integer id = rs.getInt("Id");
+                String name = rs.getString("Name");
+                String email = rs.getString("Email");
+                Date birthDate = rs.getDate("BirthDate");
+                Double baseSalary = rs.getDouble("BaseSalary");
+                Department dep = mapDeparment.get(rs.getInt("DepartmentId"));
+                if(dep == null){
+                    dep = instantiateDepartment(rs);
+                    mapDeparment.put(rs.getInt("DepartmentId"), dep);
+                }
+                sellerList.add(new Seller(id, name, email, birthDate, baseSalary, dep));
+            }
+            return sellerList;
+        }catch (SQLException e){
+            throw new DbException(e.getMessage());
+        }finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
+        }
+    }
+
     private Seller instantiateSeller(ResultSet rs, Department department) throws SQLException{
         return new Seller(rs.getInt("Id"), rs.getString("Name"), rs.getString("Email"), rs.getDate("BirthDate"),
                 rs.getDouble("BaseSalary"), department);
@@ -93,5 +128,4 @@ public class SellerDaoJDBC implements SellerDAO {
         return new Department(rs.getInt("DepartmentId"), rs.getString("DepName"));
     }
 
-    public List<Seller> findAll(){return null;}
 }

@@ -14,15 +14,22 @@ public class Program {
 
         SellerDaoJDBC sellerDaoJdbc = DaoFactory.createSellerDao();
 
-        System.out.println("=== TEST 1: seller findById ===");
+        System.out.println("=== TEST 1: seller findById() ===");
         Seller seller = sellerDaoJdbc.findById(1);
         System.out.println(seller);
 
-        System.out.println("=== TEST 2: seller findByDepartment ===");
+        System.out.println("=== TEST 2: seller findByDepartment() ===");
         Department department = new Department(2, "departmentTest");
-        List<Seller> list = sellerDaoJdbc.findByDepartment(department);
+        List<Seller> listFindByDepartment = sellerDaoJdbc.findByDepartment(department);
 
-        for(Seller obj : list){
+        for(Seller obj : listFindByDepartment){
+            System.out.println(obj);
+        }
+
+        System.out.println("=== TEST 3: seller findAll() ===");
+        List<Seller> listFindAll = sellerDaoJdbc.findAll();
+
+        for(Seller obj : listFindAll){
             System.out.println(obj);
         }
     }
