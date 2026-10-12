@@ -18,6 +18,7 @@ public class SellerDaoJDBC implements SellerDAO {
         this.conn = conn;
     }
 
+    @Override
     public void insertSeller(Seller seller){
         PreparedStatement st = null;
 
@@ -53,13 +54,14 @@ public class SellerDaoJDBC implements SellerDAO {
         }
     }
 
+    @Override
     public void updateSeller(Seller seller){
         PreparedStatement st = null;
 
         try {
             st = conn.prepareStatement("update seller " +
                     "set Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? " +
-                    "where Id = ?", Statement.RETURN_GENERATED_KEYS);
+                    "where Id = ?");
 
             st.setString(1, seller.getName());
             st.setString(2, seller.getEmail());
@@ -77,6 +79,7 @@ public class SellerDaoJDBC implements SellerDAO {
         }
     }
 
+    @Override
     public void deleteById(Integer id){
         PreparedStatement st = null;
 
@@ -95,6 +98,7 @@ public class SellerDaoJDBC implements SellerDAO {
         }
     }
 
+    @Override
     public Seller findById(Integer id){
         PreparedStatement st = null;
         ResultSet rs = null;
@@ -120,6 +124,7 @@ public class SellerDaoJDBC implements SellerDAO {
 
     }
 
+    @Override
     public List<Seller> findByDepartment(Department department){
         PreparedStatement st = null;
         ResultSet rs = null;
@@ -153,6 +158,7 @@ public class SellerDaoJDBC implements SellerDAO {
         }
     }
 
+    @Override
     public List<Seller> findAll(){
         PreparedStatement st = null;
         ResultSet rs = null;
