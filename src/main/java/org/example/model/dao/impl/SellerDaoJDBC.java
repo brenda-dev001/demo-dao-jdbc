@@ -52,7 +52,31 @@ public class SellerDaoJDBC implements SellerDAO {
             DB.closeStatement(st);
         }
     }
-    public void updateSeller(Integer id){}
+
+    public void updateSeller(Seller seller){
+        PreparedStatement st = null;
+
+        try {
+            st = conn.prepareStatement("update seller " +
+                    "set Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? " +
+                    "where Id = ?", Statement.RETURN_GENERATED_KEYS);
+
+            st.setString(1, seller.getName());
+            st.setString(2, seller.getEmail());
+            st.setDate(3, new java.sql.Date(seller.getBirthDate().getTime()));
+            st.setDouble(4, seller.getBaseSalary());
+            st.setInt(5, seller.getDepartment().getId());
+            st.setInt(6, seller.getId());
+
+            st.executeUpdate();
+
+        }catch (SQLException e){
+            throw new DbException(e.getMessage());
+        }finally {
+            DB.closeStatement(st);
+        }
+    }
+
     public void deleterById(Integer id){}
     public Seller findById(Integer id){
         PreparedStatement st = null;

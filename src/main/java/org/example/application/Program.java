@@ -38,5 +38,11 @@ public class Program {
         Seller insertSeller = new Seller(null, "Luiza", "Luiza@", new Date(), 4000.0, department);
         sellerDaoJdbc.insertSeller(insertSeller);
         System.out.println("Inserted! New id = " + insertSeller.getId());
+
+        System.out.println("=== TEST 5: seller updateSeller() ===");
+        Seller updateSeller = sellerDaoJdbc.findById(insertSeller.getId());
+        updateSeller.setEmail("luiza@gmail.com");
+        sellerDaoJdbc.updateSeller(updateSeller);
+        System.out.println("Update completed! " + updateSeller);
     }
 }
