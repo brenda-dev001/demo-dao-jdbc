@@ -8,7 +8,7 @@ import java.util.List;
 public interface SellerDAO {
 
     void insertSeller(Seller seller);
-    void updateSeller(Integer id);
+    void updateSeller(Seller seller);
     void deleterById(Integer id);
     Seller findById(Integer id);
     List<Seller> findAll();
