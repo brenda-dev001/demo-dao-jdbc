@@ -44,5 +44,8 @@ public class Program {
         updateSeller.setEmail("luiza@gmail.com");
         sellerDaoJdbc.updateSeller(updateSeller);
         System.out.println("Update completed! " + updateSeller);
+
+        System.out.println("=== TEST 6: seller deleteById() ===");
+        sellerDaoJdbc.deleteById(7);
     }
 }
