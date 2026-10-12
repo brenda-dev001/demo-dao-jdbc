@@ -6,11 +6,9 @@ import org.example.model.dao.SellerDAO;
 import org.example.model.entities.Department;
 import org.example.model.entities.Seller;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 public class SellerDaoJDBC implements SellerDAO {
 
@@ -20,7 +18,40 @@ public class SellerDaoJDBC implements SellerDAO {
         this.conn = conn;
     }
 
-    public void insertSeller(Seller seller){}
+    public void insertSeller(Seller seller){
+        PreparedStatement st = null;
+
+        try {
+            st = conn.prepareStatement("insert into seller " +
+                    "(Name, Email, BirthDate, BaseSalary, DepartmentId) " +
+                    "values (?, ?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS);
+
+            st.setString(1, seller.getName());
+            st.setString(2, seller.getEmail());
+            st.setDate(3, new java.sql.Date(seller.getBirthDate().getTime()));
+            st.setDouble(4, seller.getBaseSalary());
+            st.setInt(5, seller.getDepartment().getId());
+
+            int rowsAffected = st.executeUpdate();
+
+            if(rowsAffected > 0){
+                ResultSet rs = st.getGeneratedKeys();
+                if(rs.next()){
+                    int id  = rs.getInt(1);
+                    seller.setId(id);
+                }
+                DB.closeResultSet(rs);
+            }else{
+                throw new SQLException("Unexpected error! No rows affected!");
+            }
+
+        }catch (SQLException e){
+            throw new DbException(e.getMessage());
+        }finally {
+            DB.closeStatement(st);
+        }
+    }
     public void updateSeller(Integer id){}
     public void deleterById(Integer id){}
     public Seller findById(Integer id){
